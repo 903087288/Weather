@@ -142,7 +142,7 @@ public class ChoseAreaFragment extends Fragment {
         }
     }
     /**
-     *
+     ***
      * 查询选中省内的县，优先从数据库查询，如果没有查询到再去服务器上查
      */
     private void queryCounties(){
