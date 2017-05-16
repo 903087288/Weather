@@ -1,6 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    signingConfigs {
+        config {
+            keyAlias 'key'
+            keyPassword '111111'
+            storeFile file('F:/JAVAEE/weather/keystore.jks')
+            storePassword '111111'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -32,4 +45,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.code.gson:gson:2.7'
     compile files('libs/glide-3.7.0.jar')
+    compile files('libs/BaiduLBS_Android.jar')
 }
