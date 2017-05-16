@@ -2,6 +2,7 @@ package com.example.tianqiyubao.util;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.tianqiyubao.R;
 import com.example.tianqiyubao.db.City;
 import com.example.tianqiyubao.db.County;
 import com.example.tianqiyubao.db.Province;
+import com.example.tianqiyubao.map.mapActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -42,6 +44,7 @@ public class ChoseAreaFragment extends Fragment {
     private ListView listView;
     private ArrayAdapter<String>adapter;
     private List<String>dataList=new ArrayList<>();
+    private Button mMap;
 
      //省列表****
     private List<Province>provinceList;
@@ -60,6 +63,7 @@ public class ChoseAreaFragment extends Fragment {
         View view=inflater.inflate(R.layout.choose_area,container,false);
         titleText=(TextView) view.findViewById(R.id.title_text);
         backButton=(Button) view.findViewById(R.id.back_button);
+        mMap = (Button)view.findViewById(R.id.map);
         listView=(ListView) view.findViewById(R.id.list_view);
         adapter=new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
@@ -89,6 +93,13 @@ public class ChoseAreaFragment extends Fragment {
                     }
                 }
 
+        });
+        mMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(),mapActivity.class);
+                startActivity(i);
+            }
         });
     queryProvinces();
     }
