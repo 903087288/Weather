@@ -17,12 +17,14 @@
         android:textSize="20sp"/>
     <Button
         android:id="@+id/back_button"
+        android:background="@drawable/location"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="10dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
     <Button
+        android:background="@drawable/location"
         android:id="@+id/map"
         android:layout_width="25dp"
         android:layout_height="25dp"

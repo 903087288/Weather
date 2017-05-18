@@ -15,16 +15,23 @@
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/applogo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="mybGP1ZbNCkIiekvBakQeKXsGBtBe7nM" />
+            android:value="67lxq7WCfvhzCdxte0IKE9t9DbRORMqS" />
 
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".util.welcomeGuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,9 @@
 package com.example.tianqiyubao.util;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ public class ChoseAreaFragment extends Fragment {
     private List<String>dataList=new ArrayList<>();
     private Button mMap;
 
+
      //省列表****
     private List<Province>provinceList;
     //市列表***
@@ -64,6 +67,31 @@ public class ChoseAreaFragment extends Fragment {
         titleText=(TextView) view.findViewById(R.id.title_text);
         backButton=(Button) view.findViewById(R.id.back_button);
         mMap = (Button)view.findViewById(R.id.map);
+        mMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog=new AlertDialog.Builder(getActivity());
+                dialog.setTitle("温馨提示");
+                dialog.setMessage("是否定位到当前城市？");
+                dialog.setIcon(R.drawable.location);
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i=new Intent();
+                        i.setClass(getActivity(),mapActivity.class);
+                        startActivity(i);
+                    }
+                });
+           dialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
+                   dialog.dismiss();
+               }
+           });
+                dialog.create().show();
+            }
+        });
         listView=(ListView) view.findViewById(R.id.list_view);
         adapter=new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
@@ -94,13 +122,7 @@ public class ChoseAreaFragment extends Fragment {
                 }
 
         });
-        mMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(),mapActivity.class);
-                startActivity(i);
-            }
-        });
+
     queryProvinces();
     }
 
