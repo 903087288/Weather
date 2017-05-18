@@ -17,7 +17,7 @@
         android:textSize="20sp"/>
     <Button
         android:id="@+id/back_button"
-        android:background="@drawable/location"
+        android:background="@drawable/back"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="10dp"
