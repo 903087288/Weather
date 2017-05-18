@@ -128,7 +128,8 @@ public class ChoseAreaFragment extends Fragment {
 
 
     /*查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
-
+      查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
+      查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
      */
 
     private void queryProvinces(){
