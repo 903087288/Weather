@@ -1,7 +1,7 @@
 package com.example.tianqiyubao.gson;
 
 import com.google.gson.annotations.SerializedName;
-
+//获取gson
 public class Suggestion {
 
     @SerializedName("comf")
