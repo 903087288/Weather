@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -85,9 +87,9 @@ public class mapActivity extends Activity {
         option.setScanSpan(1000); //  自动定位间隔
         option.setIsNeedAddress(true);//  是否需要地址
         option.setIsNeedLocationPoiList(true);
+       //option.setLocationMode(LocationClientOption.LocationMode.Device_Sensors);
 //  定位模式
-        option.setLocationMode(LocationClientOption.LocationMode.
-                Hight_Accuracy);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
 //  根据配置信息对定位客户端进行设置
         mLocationClient.setLocOption(option);
 //  注册定位监听
@@ -95,21 +97,20 @@ public class mapActivity extends Activity {
         mLocationClient.registerLocationListener(mMyLocationListener);
 //  设置定位图标
         BitmapDescriptor mCurrentMarker =
-                BitmapDescriptorFactory
-                        .fromResource(R.drawable.location);
+                BitmapDescriptorFactory.fromResource(R.drawable.location);
         MyLocationConfiguration config = new
-                MyLocationConfiguration(
-                mCurrentMode, true, mCurrentMarker);
-        mBaiduMap.setMyLocationConfigeration(config);
+                MyLocationConfiguration(mCurrentMode, true, mCurrentMarker);
+                mBaiduMap.setMyLocationConfigeration(config);
     }
     /**
      *  实现实位回调监听
      */
-    public class MyLocationListener implements
-            BDLocationListener {
+    public class MyLocationListener implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
+
 // mapView  销毁后不在处理新接收的位置
+
             if (location == null || mMapView == null)
                 return;
 //  构造定位数据
@@ -151,7 +152,12 @@ public class mapActivity extends Activity {
                 sb.append(p.getRank());
             }
             Log.i("BaiduLocationInfo", sb.toString());
+            //获取当前位置信息
+            Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();
         }
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -208,7 +214,6 @@ public class mapActivity extends Activity {
                 MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);
     }
-
     @Override
     protected void onStart()
     {
