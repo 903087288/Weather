@@ -28,7 +28,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="mybGP1ZbNCkIiekvBakQeKXsGBtBe7nM" />
+            android:value="67lxq7WCfvhzCdxte0IKE9t9DbRORMqS" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -45,7 +45,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeatherActivity"></activity>
+        <activity android:name=".WeatherActivity">
+
+        </activity>
         <service android:name="com.baidu.location.f" android:enabled="true"
             android:process=":remote">
             </service>

@@ -153,9 +153,9 @@ public class mapActivity extends Activity {
             }
             Log.i("BaiduLocationInfo", sb.toString());
             //获取当前位置信息
-            Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
+           /* Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
             Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();*/
         }
 
     }
@@ -253,5 +253,9 @@ public class mapActivity extends Activity {
 
         mMapView.onPause();
     }
+
+
+
+
 
 }
