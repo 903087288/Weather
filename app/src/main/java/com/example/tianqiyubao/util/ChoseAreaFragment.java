@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tianqiyubao.MainActivity;
 import com.example.tianqiyubao.R;
+import com.example.tianqiyubao.WeatherActivity;
 import com.example.tianqiyubao.db.City;
 import com.example.tianqiyubao.db.County;
 import com.example.tianqiyubao.db.Province;
@@ -108,6 +110,16 @@ public class ChoseAreaFragment extends Fragment {
                 else if (currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(position);
                     queryCounties();
+                }else {
+                    if (currentLevel == LEVEL_COUNTY) {
+                        String weatherId = countyList.get(position).getWeatherId();
+                        if (getActivity() instanceof MainActivity) {
+                            Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                            intent.putExtra("weather_id", weatherId);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+                    }
                 }
             }
         });
@@ -128,8 +140,7 @@ public class ChoseAreaFragment extends Fragment {
 
 
     /*查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
-      查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
-      查询全国所有的省  ，优先从数据库中查询，如果没有查询到再去服务器上查询
+
      */
 
     private void queryProvinces(){
