@@ -2,7 +2,9 @@ package com.example.tianqiyubao.map;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,7 +27,6 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.example.tianqiyubao.R;
-
 public class mapActivity extends Activity {
     /*  地图控件 */
     private TextureMapView mMapView=null;
@@ -153,11 +154,21 @@ public class mapActivity extends Activity {
             }
             Log.i("BaiduLocationInfo", sb.toString());
             //获取当前位置信息
-           /* Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();*/
-        }
 
+//            Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();
+           final Toast toast= Toast.makeText(mapActivity.this, "你所定的当前位置为"+location.getCountry()+""
+                    +location.getProvince() +""+location.getCity(), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER,0,0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.show();
+                }
+            },3000l);
+
+    }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -253,9 +264,5 @@ public class mapActivity extends Activity {
 
         mMapView.onPause();
     }
-
-
-
-
 
 }
