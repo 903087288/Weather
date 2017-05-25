@@ -1,6 +1,7 @@
 package com.example.tianqiyubao.map;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,6 +28,8 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.example.tianqiyubao.R;
+import com.example.tianqiyubao.WeatherActivity;
+
 public class mapActivity extends Activity {
     /*  地图控件 */
     private TextureMapView mMapView=null;
@@ -167,6 +170,11 @@ public class mapActivity extends Activity {
                     toast.show();
                 }
             },3000l);
+            String weatherId=location.getCity();
+            Intent intent=new Intent(mapActivity.this, WeatherActivity.class);
+            intent.putExtra("weather_id",weatherId);
+            startActivity(intent);
+            mapActivity.this.finish();
 
     }
     }
