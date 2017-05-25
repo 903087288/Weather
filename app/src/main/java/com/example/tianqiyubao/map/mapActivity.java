@@ -156,7 +156,7 @@ public class mapActivity extends Activity {
                 sb.append(p.getRank());
             }
             Log.i("BaiduLocationInfo", sb.toString());
-            //获取当前位置信息
+            //获取当前位置信息并加载当前的天气
 
 //            Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
 //            Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
@@ -175,7 +175,6 @@ public class mapActivity extends Activity {
             intent.putExtra("weather_id",weatherId);
             startActivity(intent);
             mapActivity.this.finish();
-
     }
     }
     @Override
