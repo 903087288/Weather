@@ -163,13 +163,14 @@ public class mapActivity extends Activity {
 //            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();
            final Toast toast= Toast.makeText(mapActivity.this, "你所定的当前位置为"+location.getCountry()+""
                     +location.getProvince() +""+location.getCity(), Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER,0,0);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     toast.show();
                 }
             },3000l);
+
             String weatherId=location.getCity();
             Intent intent=new Intent(mapActivity.this, WeatherActivity.class);
             intent.putExtra("weather_id",weatherId);

@@ -37,7 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".util.welcomeGuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,15 +44,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeatherActivity">
+        <activity android:name=".WeatherActivity" />
 
-        </activity>
-        <service android:name="com.baidu.location.f" android:enabled="true"
-            android:process=":remote">
-            </service>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
 
-
-        <activity android:name=".map.mapActivity"></activity>
+        <activity android:name=".map.mapActivity" />
     </application>
 
 </manifest>
