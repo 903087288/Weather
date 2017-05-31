@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.tianqiyubao.gson.Forecast;
 import com.example.tianqiyubao.gson.Weather;
+import com.example.tianqiyubao.service.AutoUpdateService;
 import com.example.tianqiyubao.util.HttpUtil;
 import com.example.tianqiyubao.util.Utility;
 
@@ -145,6 +146,8 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString("weather", responseText);
                             editor.apply();
                             showWeatherInfo(weather);
+                            Intent  intent=new Intent(WeatherActivity.this,AutoUpdateService.class);
+                            startService(intent);
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -153,7 +156,6 @@ public class WeatherActivity extends AppCompatActivity {
                     }
                 });
             }
-
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -223,6 +225,7 @@ public class WeatherActivity extends AppCompatActivity {
             aqiText.setText(weather.aqi.city.aqi);
             pm25Text.setText(weather.aqi.city.pm25);
         }
+
         String comfort = "舒适度：" + weather.suggestion.comfort.info;
         String carWash = "洗车指数：" + weather.suggestion.carWash.info;
         String sport = "运行建议：" + weather.suggestion.sport.info;
