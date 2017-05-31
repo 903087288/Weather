@@ -100,7 +100,7 @@ public class WeatherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_weather);
         // 初始化各控件
         api = WXAPIFactory.createWXAPI(this, APP_ID);
-        //向app_id 注册到微信中
+        //这是向app_id 注册到微信中
         api.registerApp(APP_ID);
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
