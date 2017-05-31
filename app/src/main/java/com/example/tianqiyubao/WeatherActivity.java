@@ -1,11 +1,17 @@
 package com.example.tianqiyubao;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,12 +31,19 @@ import com.example.tianqiyubao.gson.Weather;
 import com.example.tianqiyubao.service.AutoUpdateService;
 import com.example.tianqiyubao.util.HttpUtil;
 import com.example.tianqiyubao.util.Utility;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.SendMessageToWX;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.sdk.openapi.WXImageObject;
+import com.tencent.mm.sdk.openapi.WXMediaMessage;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.tencent.mm.sdk.platformtools.Util.bmpToByteArray;
 
 /**
  * Created by dell on 2017/5/22.
@@ -69,6 +82,16 @@ public class WeatherActivity extends AppCompatActivity {
 
     private String mWeatherId;
 
+    private ImageView sharetowechat;
+
+    private ImageView getSharetowechatfriend;
+
+    public static final String APP_ID = "wx86820ae58c9cecf1";
+
+    private IWXAPI api;
+
+    private static final int IMAGE = 1;
+    private static final int imagea = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +99,10 @@ public class WeatherActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_weather);
         // 初始化各控件
-       bingPicImg=(ImageView)findViewById(R.id.bing_pic_img);
+        api = WXAPIFactory.createWXAPI(this, APP_ID);
+        //向app_id 注册到微信中
+        api.registerApp(APP_ID);
+        bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
         titleCity = (TextView) findViewById(R.id.title_city);
         titleUpdateTime = (TextView) findViewById(R.id.title_update_time);
@@ -92,25 +118,30 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton = (Button) findViewById(R.id.nav_button);
-      final String weatherId;
+        sharetowechat = (ImageView) findViewById(R.id.shareto_wechat);
+        getSharetowechatfriend = (ImageView) findViewById(R.id.shareto_wechatfriend);
+
+
+        final String weatherId;
+
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
-        String bingPic=prefs.getString("bing_pic",null);
-        if(bingPic!=null){
+        String bingPic = prefs.getString("bing_pic", null);
+        if (bingPic != null) {
             Glide.with(this).load(bingPic).into(bingPicImg);
-        }else {
+        } else {
             loadBingPic();
         }
         if (weatherString != null) {
             // 有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
-            weatherId=weather.basic.weatherId;
+            weatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         } else {
             // 无缓存时去服务器查询天气
 
-             weatherId = getIntent().getStringExtra("weather_id");
+            weatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
@@ -126,6 +157,95 @@ public class WeatherActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+        //获取相册
+        sharetowechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, IMAGE);
+            }
+        });
+        getSharetowechatfriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, imagea);
+
+            }
+        });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            c.close();
+
+
+            WXImageObject imgObj = new WXImageObject();
+            //设置文件图像的路径
+            imgObj.setImagePath(imagePath);
+            //创建wxmediamessage对象，并包装object对象
+            WXMediaMessage msg = new WXMediaMessage();
+            msg.mediaObject = imgObj;
+            // 压缩图像
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
+            //释放图像所占用的内存
+            bitmap.recycle();
+            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
+            //创建sendmessageto.req对象
+            SendMessageToWX.Req req = new SendMessageToWX.Req();
+            req.transaction = buildTransaction("img");
+            req.message = msg;
+            req.scene = SendMessageToWX.Req.WXSceneSession;
+            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
+
+            finish();
+
+        }
+        if (requestCode == imagea && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            c.close();
+            WXImageObject imgObj = new WXImageObject();
+            //设置文件图像的路径
+            imgObj.setImagePath(imagePath);
+            //创建wxmediamessage对象，并包装object对象
+            WXMediaMessage msg = new WXMediaMessage();
+            msg.mediaObject = imgObj;
+            // 压缩图像
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
+            //释放图像所占用的内存
+            bitmap.recycle();
+            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
+            //创建sendmessageto.req对象
+            SendMessageToWX.Req req = new SendMessageToWX.Req();
+            req.transaction = buildTransaction("img");
+            req.message = msg;
+            req.scene = SendMessageToWX.Req.WXSceneTimeline;
+            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
+
+            finish();
+
+        }
+    }
+
+    private String buildTransaction(final String type){
+        return (type==null)?String.valueOf(System.currentTimeMillis()):type+ System.currentTimeMillis();
     }
 
     /**
@@ -146,7 +266,7 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString("weather", responseText);
                             editor.apply();
                             showWeatherInfo(weather);
-                            Intent  intent=new Intent(WeatherActivity.this,AutoUpdateService.class);
+                            Intent intent = new Intent(WeatherActivity.this, AutoUpdateService.class);
                             startService(intent);
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
@@ -156,6 +276,7 @@ public class WeatherActivity extends AppCompatActivity {
                     }
                 });
             }
+
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -171,6 +292,7 @@ public class WeatherActivity extends AppCompatActivity {
         });
 
     }
+
     private void loadBingPic() {
         String requestBingPic = "http://guolin.tech/api/bing_pic";
         HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
@@ -235,6 +357,5 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
 
     }
-
 
 }
