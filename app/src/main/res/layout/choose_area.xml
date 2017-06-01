@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCFF66">
+    android:background="@drawable/mainbackground">
 <RelativeLayout
     android:background="#232323"
     android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="#fff"
-        android:textSize="20sp"/>//修改图标//修改图标//修改图标//修改图标
+        android:textSize="20sp"/>
     <Button
         android:id="@+id/back_button"
         android:background="@drawable/back"
