@@ -31,13 +31,19 @@ import com.example.tianqiyubao.gson.Weather;
 import com.example.tianqiyubao.service.AutoUpdateService;
 import com.example.tianqiyubao.util.HttpUtil;
 import com.example.tianqiyubao.util.Utility;
+import com.tencent.connect.share.QQShare;
+import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.mm.sdk.openapi.WXImageObject;
 import com.tencent.mm.sdk.openapi.WXMediaMessage;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -92,12 +98,18 @@ public class WeatherActivity extends AppCompatActivity {
 
     private static final int IMAGE = 1;
     private static final int imagea = 2;
+    public static Tencent mTencent;
+    public static String mAppid="1106096897";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_weather);
+        if (mTencent == null) {
+            mTencent = Tencent.createInstance(mAppid, this);
+        }
+        init();
         // 初始化各控件
         api = WXAPIFactory.createWXAPI(this, APP_ID);
         //这是向app_id 注册到微信中
@@ -179,6 +191,86 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
     }
+    private void init() {
+        ImageView btn=(ImageView) findViewById(R.id.shareto_qq);
+        ImageView btn1=(ImageView)findViewById(R.id.shareto_qqzone);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickShare();
+            }
+        });
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToQQzone();
+            }
+        });
+
+
+    }
+    private void shareToQQzone() {
+        try {
+            final Bundle params = new Bundle();
+            params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE,
+                    QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
+            params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "天气小卫士");
+            params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "天气");
+            params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL,
+                    "http://www.weather.com.cn/");
+            ArrayList<String> imageUrls = new ArrayList<String>();
+            imageUrls.add("http://media-cdn.tripadvisor.com/media/photo-s/01/3e/05/40/the-sandbar-that-links.jpg");
+            params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrls);
+            params.putInt(QzoneShare.SHARE_TO_QQ_EXT_INT,
+                    QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN);
+            Tencent mTencent = Tencent.createInstance("1106062414", WeatherActivity.this);
+            mTencent.shareToQzone(WeatherActivity.this, params,
+                    new WeatherActivity.BaseUiListener1());
+        } catch (Exception e) {
+        }
+    }
+    private void onClickShare() {
+        final Bundle params = new Bundle();
+        params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+        params.putString(QQShare.SHARE_TO_QQ_TITLE, "天气小卫士");
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  "帮助我们了解天气");
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "天气小卫士");
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  "http://www.weather.com.cn/");
+        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "http://media-cdn.tripadvisor.com/media/photo-s/01/3e/05/40/the-sandbar-that-links.jpg");
+        mTencent.shareToQQ(WeatherActivity.this, params, new WeatherActivity.BaseUiListener1());
+    }
+    //回调接口  (成功和失败的相关操作)
+    private class BaseUiListener1 implements IUiListener {
+        @Override
+        public void onComplete(Object response) {
+            doComplete(response);
+        }
+
+        protected void doComplete(Object values) {
+        }
+
+        @Override
+        public void onError(UiError e) {
+        }
+
+        @Override
+        public void onCancel() {
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
