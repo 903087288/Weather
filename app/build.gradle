@@ -13,6 +13,19 @@ android {
             storeFile file('F:/JAVAEE/weather/keystore.jks')
             storePassword '111111'
         }
+        debug {
+            storeFile file('../debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+
+        }
+        release {
+            storeFile file('../debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -26,8 +39,16 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+
+            debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 }
@@ -46,6 +67,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.code.gson:gson:2.7'
     testCompile 'junit:junit:4.12'
-    compile files('libs/libammsdk.jar')
-    compile files('libs/libammsdk.jar')
+    compile 'com.sina.weibo.sdk:core:2.0.3:openDefaultRelease@aar'
 }

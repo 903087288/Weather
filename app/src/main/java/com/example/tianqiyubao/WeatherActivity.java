@@ -31,6 +31,7 @@ import com.example.tianqiyubao.gson.Weather;
 import com.example.tianqiyubao.service.AutoUpdateService;
 import com.example.tianqiyubao.util.HttpUtil;
 import com.example.tianqiyubao.util.Utility;
+import com.example.tianqiyubao.weiboshare.WBDemoMainActivity;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -110,6 +111,7 @@ public class WeatherActivity extends AppCompatActivity {
             mTencent = Tencent.createInstance(mAppid, this);
         }
         init();
+        init1();
         // 初始化各控件
         api = WXAPIFactory.createWXAPI(this, APP_ID);
         //这是向app_id 注册到微信中
@@ -206,6 +208,19 @@ public class WeatherActivity extends AppCompatActivity {
                 shareToQQzone();
             }
         });
+
+
+    }
+    private void init1() {
+        ImageView btn11=(ImageView) findViewById(R.id.shareto_webo);
+        btn11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(WeatherActivity.this, WBDemoMainActivity.class);
+                startActivity(i);
+            }
+        });
+       ;
 
 
     }

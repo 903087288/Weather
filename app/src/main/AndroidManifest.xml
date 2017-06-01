@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -71,7 +73,28 @@
             </intent-filter>
         </activity>
         <activity android:name=".WeatherActivity" />
+        <!-- 授权认证 -->
+        <activity android:name=".weiboshare.WBShareMainActivity" />
+        <activity android:name=".weiboshare.WBDemoMainActivity" />
+        <!-- 分享 -->
+        <activity
+            android:name=".weiboshare.WBShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 统计 -->
 
+
+        <meta-data
+            android:name="WEIBO_APPKEY"
+            android:value="508133199" />
+        <meta-data
+            android:name="WEIBO_CHANNEL"
+            android:value="weibo" />
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

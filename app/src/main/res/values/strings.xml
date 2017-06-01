@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">天气小卫士</string>
+    <string name="weibosdk_demo_feature_share">分享到微博</string>
+    <string name="weibosdk_demo_share_to">分  享</string>
+    <string name="weibosdk_demo_share_text_title">分享文字</string>
+    <string name="weibosdk_demo_share_image_title">分享图片</string>
+    <string name="weibosdk_demo_share_to_weibo">分享到微博（客户端）</string>
+    <string name="weibosdk_demo_fragment_title">This is a fragment page</string>
+    <string name="weibosdk_demo_fragment_btn">fragment page</string>
+    <string name="weibosdk_demo_share_webpage_title">分享页面</string>
+    <string name="weibosdk_demo_share_webpage_desc">网页描述：XXX</string>
+    <string name="weibosdk_demo_toast_share_success">分享成功</string>
+    <string name="weibosdk_demo_toast_share_failed">分享失败</string>
+    <string name="weibosdk_demo_toast_share_canceled">取消分享</string>
+    <string name="weibosdk_demo_share_text_template">我正在使用微博客户端发博器分享文字</string>
+    <string name="weibosdk_demo_test_webpage_url">http://news.sina.com.cn/c/2017-5-30/021928494669.html</string>
 </resources>
