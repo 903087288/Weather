@@ -27,6 +27,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
+import com.example.tianqiyubao.MainActivity;
 import com.example.tianqiyubao.R;
 import com.example.tianqiyubao.WeatherActivity;
 
@@ -55,6 +56,7 @@ public class mapActivity extends Activity {
             " 地图模 式【罗盘】"};
     /*  当前地图定位模式的 Index */
     private int mCurrentStyle = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -157,13 +159,8 @@ public class mapActivity extends Activity {
             }
             Log.i("BaiduLocationInfo", sb.toString());
             //获取当前位置信息并加载当前的天气
-
-//            Toast.makeText(mapActivity.this, "Country="+location.getCountry(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(mapActivity.this, "Province="+location.getProvince(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(mapActivity.this, "City="+location.getCity(), Toast.LENGTH_SHORT).show();
-           final Toast toast= Toast.makeText(mapActivity.this, "你所定的当前位置为"+location.getCountry()+""
+            final Toast toast= Toast.makeText(mapActivity.this, "你所定的当前位置为"+location.getCountry()+""
                     +location.getProvince() +""+location.getCity(), Toast.LENGTH_SHORT);
-
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -171,12 +168,14 @@ public class mapActivity extends Activity {
                 }
             },3000l);
 
+
             String weatherId=location.getCity();
             Intent intent=new Intent(mapActivity.this, WeatherActivity.class);
             intent.putExtra("weather_id",weatherId);
             startActivity(intent);
             mapActivity.this.finish();
-    }
+
+     }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

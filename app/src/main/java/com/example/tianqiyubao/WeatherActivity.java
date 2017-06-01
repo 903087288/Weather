@@ -134,10 +134,13 @@ public class WeatherActivity extends AppCompatActivity {
             loadBingPic();
         }
         if (weatherString != null) {
-            // 有缓存时直接解析天气数据
+         // 有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
             weatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
+            String weatherId1 = getIntent().getStringExtra("weather_id");
+            weatherLayout.setVisibility(View.INVISIBLE);
+            requestWeather(weatherId1);
         } else {
             // 无缓存时去服务器查询天气
 
