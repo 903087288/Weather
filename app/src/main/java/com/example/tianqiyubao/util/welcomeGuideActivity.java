@@ -1,5 +1,7 @@
 package com.example.tianqiyubao.util;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.view.PagerAdapter;
@@ -14,6 +16,8 @@ import android.widget.LinearLayout;
 
 import com.example.tianqiyubao.MainActivity;
 import com.example.tianqiyubao.R;
+import com.example.tianqiyubao.WeatherActivity;
+import com.example.tianqiyubao.map.mapActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,10 +92,39 @@ public class welcomeGuideActivity extends AppCompatActivity {
         list = new ArrayList<View>();
         btn = (Button) findViewById(R.id.welcome_guide_btn);
         pager = (ViewPager)findViewById(R.id.welcome_pager);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v){
+//                click(v);
+//            }
+//        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                click(v);
+            public void onClick(View v) {
+                AlertDialog.Builder dialog=new AlertDialog.Builder(welcomeGuideActivity.this);
+                dialog.setTitle("温馨提示");
+                dialog.setMessage("是否定位到当前城市？");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i=new Intent();
+                        i.setClass(welcomeGuideActivity.this,mapActivity.class);
+                        startActivity(i);
+                    }
+                });
+                dialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                        btn.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View v){
+                                     click(v);
+                                  }
+                           });
+                    }
+                });
+                dialog.create().show();
             }
         });
     }
