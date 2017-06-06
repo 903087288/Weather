@@ -12,12 +12,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -93,6 +100,9 @@ public class WeatherActivity extends AppCompatActivity {
 
     private ImageView getSharetowechatfriend;
 
+    private FloatingActionButton moveBtn;
+    private LinearLayout shareLayout;
+
     public static final String APP_ID = "wx86820ae58c9cecf1";
 
     private IWXAPI api;
@@ -101,6 +111,11 @@ public class WeatherActivity extends AppCompatActivity {
     private static final int imagea = 2;
     public static Tencent mTencent;
     public static String mAppid="1106096897";
+    private boolean clickormove = true;//点击或拖动，点击为true，拖动为false
+    private int downX, downY;//按下时的X，Y坐标
+    private boolean hasMeasured = false;//ViewTree是否已被测量过，是为true，否为false
+    private View content;//界面的ViewTree
+    private int screenWidth,screenHeight;//ViewTree的宽和高
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +149,9 @@ public class WeatherActivity extends AppCompatActivity {
         navButton = (Button) findViewById(R.id.nav_button);
         sharetowechat = (ImageView) findViewById(R.id.shareto_wechat);
         getSharetowechatfriend = (ImageView) findViewById(R.id.shareto_wechatfriend);
+        moveBtn = (FloatingActionButton)findViewById(R.id.movebtn);
+        shareLayout = (LinearLayout)findViewById(R.id.share_layout);
+
 
 
         final String weatherId;
@@ -192,7 +210,95 @@ public class WeatherActivity extends AppCompatActivity {
 
             }
         });
+
+        onMoveBtn();
+        moveBtn.setOnClickListener(new View.OnClickListener() {//设置按钮被点击的监听器
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (clickormove)
+                    drawerLayout.openDrawer(Gravity.RIGHT);
+            }
+        });
     }
+
+    private void onMoveBtn() {
+        content = getWindow().findViewById(Window.ID_ANDROID_CONTENT);//获取界面的ViewTree根节点View
+        DisplayMetrics dm = getResources().getDisplayMetrics();//获取显示屏属性
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
+        ViewTreeObserver vto = content.getViewTreeObserver();//获取ViewTree的监听器
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                // TODO Auto-generated method stub
+                if(!hasMeasured)
+                {
+                    screenHeight = content.getMeasuredHeight();//获取ViewTree的高度
+                    hasMeasured = true;//设置为true，使其不再被测量。
+                }
+                return true;//如果返回false，界面将为空。
+            }
+        });
+        moveBtn = (FloatingActionButton) findViewById(R.id.movebtn);
+        moveBtn.setOnTouchListener(new View.OnTouchListener() {//设置按钮被触摸的时间
+            int lastX, lastY; // 记录移动的最后的位置
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                int ea = event.getAction();//获取事件类型
+                switch (ea) {
+                    case MotionEvent.ACTION_DOWN: // 按下事件
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        downX = lastX;
+                        downY = lastY;
+                        break;
+                    case MotionEvent.ACTION_MOVE: // 拖动事件
+                        // 移动中动态设置位置
+                        int dx = (int) event.getRawX() - lastX;//位移量X
+                        int dy = (int) event.getRawY() - lastY;//位移量Y
+                        int left = v.getLeft() + dx;
+                        int top = v.getTop() + dy;
+                        int right = v.getRight() + dx;
+                        int bottom = v.getBottom() + dy;
+                        //++限定按钮被拖动的范围
+                        if (left < 0) {
+                            left = 0;
+                            right = left + v.getWidth();
+                        }
+                        if (right > screenWidth) {
+                            right = screenWidth;
+                            left = right - v.getWidth();
+                        }
+                        if (top < 0) {
+                            top = 0;
+                            bottom = top + v.getHeight();
+                        }
+                        if (bottom > screenHeight) {
+                            bottom = screenHeight;
+                            top = bottom - v.getHeight();
+                        }
+                        //--限定按钮被拖动的范围
+                        v.layout(left, top, right, bottom);//按钮重画
+                        // 记录当前的位置
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP: // 弹起事件
+                        //判断是单击事件或是拖动事件，位移量大于5则断定为拖动事件
+                        if (Math.abs((int) (event.getRawX() - downX)) > 5
+                                || Math.abs((int) (event.getRawY() - downY)) > 5)
+                            clickormove = false;
+                        else
+                            clickormove = true;
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
     private void init() {
         ImageView btn=(ImageView) findViewById(R.id.shareto_qq);
         ImageView btn1=(ImageView)findViewById(R.id.shareto_qqzone);
@@ -362,7 +468,7 @@ public class WeatherActivity extends AppCompatActivity {
      * 根据天气id请求城市天气信息。
      */
     public void requestWeather(final String weatherId) {
-        String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=bc0418b57b2d4918819d3974ac1285d9";
+        String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=ea62e3b606e3404fa0a5475f17c0f00c";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -372,6 +478,7 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (weather != null && "ok".equals(weather.status)) {
+                            Log.i("wrong","0");
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
@@ -379,6 +486,7 @@ public class WeatherActivity extends AppCompatActivity {
                             Intent intent = new Intent(WeatherActivity.this, AutoUpdateService.class);
                             startService(intent);
                         } else {
+                            Log.i("wrong","1");
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
                         swipeRefresh.setRefreshing(false);
@@ -393,6 +501,7 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i("wrong","2");
                         Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         swipeRefresh.setRefreshing(false);
 

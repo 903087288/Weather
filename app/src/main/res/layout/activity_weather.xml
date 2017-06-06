@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary">
+
 
     <ImageView
         android:id="@+id/bing_pic_img"
@@ -56,10 +57,12 @@
             android:layout_gravity="start"
             />
     <LinearLayout
+        android:id="@+id/share_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="right">
+        android:layout_gravity="right"
+        android:visibility="invisible">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,4 +119,12 @@
     </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/movebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="#fff"
+        app:borderWidth="0dp"
+        android:layout_margin="5dp"
+        android:src="@drawable/share" />
 </FrameLayout>
