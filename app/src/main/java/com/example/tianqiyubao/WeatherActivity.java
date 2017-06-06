@@ -342,6 +342,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void initViews() {
         mSharedBtn = (ImageView) findViewById(R.id.shareto_webo);
         mSharedBtn.setOnClickListener(this);
+
+        //分享
     }
     @Override
     protected void onNewIntent(Intent intent) {
