@@ -74,18 +74,7 @@
         </activity>
         <activity android:name=".WeatherActivity" />
         <!-- 授权认证 -->
-        <activity android:name=".weiboshare.WBShareMainActivity" />
-        <activity android:name=".weiboshare.WBDemoMainActivity" />
         <!-- 分享 -->
-        <activity
-            android:name=".weiboshare.WBShareActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <!-- 统计 -->
 
 

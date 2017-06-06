@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -38,7 +36,15 @@ import com.example.tianqiyubao.gson.Weather;
 import com.example.tianqiyubao.service.AutoUpdateService;
 import com.example.tianqiyubao.util.HttpUtil;
 import com.example.tianqiyubao.util.Utility;
-import com.example.tianqiyubao.weiboshare.WBDemoMainActivity;
+import com.example.tianqiyubao.weiboshare.Constants;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.api.ImageObject;
+import com.sina.weibo.sdk.api.TextObject;
+import com.sina.weibo.sdk.api.WebpageObject;
+import com.sina.weibo.sdk.api.WeiboMultiMessage;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.share.WbShareCallback;
+import com.sina.weibo.sdk.share.WbShareHandler;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -62,7 +68,7 @@ import static com.tencent.mm.sdk.platformtools.Util.bmpToByteArray;
 /**
  * Created by dell on 2017/5/22.
  */
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener, WbShareCallback {
 
     public DrawerLayout drawerLayout;
 
@@ -117,16 +123,26 @@ public class WeatherActivity extends AppCompatActivity {
     private View content;//界面的ViewTree
     private int screenWidth,screenHeight;//ViewTree的宽和高
 
+    public static final String KEY_SHARE_TYPE = "key_share_type";
+    public static final int SHARE_CLIENT = 1;
+    private WbShareHandler shareHandler;
+    private int mShareType = SHARE_CLIENT;
+    int flag = 0;
+    private ImageView mSharedBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_weather);
+        WbSdk.install(this, new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE));
+        initViews();
+        mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
+        shareHandler = new WbShareHandler(this);
+        shareHandler.registerApp();
         if (mTencent == null) {
             mTencent = Tencent.createInstance(mAppid, this);
         }
         init();
-        init1();
         // 初始化各控件
         api = WXAPIFactory.createWXAPI(this, APP_ID);
         //这是向app_id 注册到微信中
@@ -298,7 +314,6 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
     }
-
     private void init() {
         ImageView btn=(ImageView) findViewById(R.id.shareto_qq);
         ImageView btn1=(ImageView)findViewById(R.id.shareto_qqzone);
@@ -317,18 +332,87 @@ public class WeatherActivity extends AppCompatActivity {
 
 
     }
-    private void init1() {
-        ImageView btn11=(ImageView) findViewById(R.id.shareto_webo);
-        btn11.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(WeatherActivity.this, WBDemoMainActivity.class);
-                startActivity(i);
-            }
-        });
-       ;
+
+    public void onClick(View v) {
+        flag = 1;
+        sendMessage(true, true);
 
 
+    }
+    private void initViews() {
+        mSharedBtn = (ImageView) findViewById(R.id.shareto_webo);
+        mSharedBtn.setOnClickListener(this);
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        shareHandler.doResultIntent(intent,this);
+    }
+    public void onWbShareSuccess() {
+        Toast.makeText(this, "分享成功", Toast.LENGTH_LONG).show();
+    }
+
+    public void onWbShareFail() {
+        Toast.makeText(this,
+                "分享失败" + "Error Message: ",
+                Toast.LENGTH_LONG).show();
+    }
+
+    public void onWbShareCancel() {
+        Toast.makeText(this, "分享取消", Toast.LENGTH_LONG).show();
+    }
+    private void sendMessage(boolean hasText, boolean hasImage) {
+        sendMultiMessage(hasText, hasImage);
+    }
+    private void sendMultiMessage(boolean hasText, boolean hasImage) {
+
+
+        WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
+        if (hasText) {
+            weiboMessage.textObject = getTextObj();
+        }
+        if (hasImage) {
+            weiboMessage.imageObject = getImageObj();
+        }
+        weiboMessage.mediaObject = getWebpageObj();
+        shareHandler.shareMessage(weiboMessage, mShareType == SHARE_CLIENT);
+
+    }
+    private TextObject getTextObj() {
+        TextObject textObject = new TextObject();
+        textObject.text = getSharedText();
+        textObject.title = "xxxx";
+        textObject.actionUrl = "http://www.baidu.com";
+        return textObject;
+    }
+    private ImageObject getImageObj() {
+        ImageObject imageObject = new ImageObject();
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.test);
+        imageObject.setImageObject(bitmap);
+        return imageObject;
+    }
+    private WebpageObject getWebpageObj() {
+        WebpageObject mediaObject = new WebpageObject();
+        mediaObject.identify = com.sina.weibo.sdk.utils.Utility.generateGUID();
+        mediaObject.title ="测试title";
+        mediaObject.description = "测试描述";
+        Bitmap  bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.ic_logo);
+        // 设置 Bitmap 类型的图片到视频对象里         设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
+        mediaObject.setThumbImage(bitmap);
+        mediaObject.actionUrl = "http://news.sina.com.cn/c/2013-10-22/021928494669.shtml";
+        mediaObject.defaultText = "Webpage 默认文案";
+        return mediaObject;
+    }
+    private String getSharedText() {
+        int formatId = R.string.weibosdk_demo_share_text_title;
+        String format = getString(formatId);
+        String text = format;
+        text = " ";
+        return text;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
     private void shareToQQzone() {
         try {
