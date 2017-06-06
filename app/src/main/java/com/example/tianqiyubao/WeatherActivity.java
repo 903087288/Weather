@@ -343,9 +343,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         // 移动中动态设置位置
                         int dx = (int) event.getRawX() - lastX;//位移量X
                         int dy = (int) event.getRawY() - lastY;//位移量Y
-                        int left = v.getLeft() + dx;
+                        int left = v.getLeft() ;
                         int top = v.getTop() + dy;
-                        int right = v.getRight() + dx;
+                        int right = v.getRight() ;
                         int bottom = v.getBottom() + dy;
                         //++限定按钮被拖动的范围
                         if (left < 0) {
