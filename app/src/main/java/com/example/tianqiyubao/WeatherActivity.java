@@ -208,6 +208,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+
+        onMoveBtn();
+        moveBtn.setOnClickListener(new View.OnClickListener() {//设置按钮被点击的监听器
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (clickormove)
+                    drawerLayout.openDrawer(Gravity.RIGHT);
+            }
+        });
         //获取相册
         sharetowechat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,16 +237,74 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            c.close();
 
-        onMoveBtn();
-        moveBtn.setOnClickListener(new View.OnClickListener() {//设置按钮被点击的监听器
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                if (clickormove)
-                    drawerLayout.openDrawer(Gravity.RIGHT);
-            }
-        });
+
+            WXImageObject imgObj = new WXImageObject();
+            //设置文件图像的路径
+            imgObj.setImagePath(imagePath);
+            //创建wxmediamessage对象，并包装object对象
+            WXMediaMessage msg = new WXMediaMessage();
+            msg.mediaObject = imgObj;
+            // 压缩图像
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
+            //释放图像所占用的内存
+            bitmap.recycle();
+            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
+            //创建sendmessageto.req对象
+            SendMessageToWX.Req req = new SendMessageToWX.Req();
+            req.transaction = buildTransaction("img");
+            req.message = msg;
+            req.scene = SendMessageToWX.Req.WXSceneSession;
+            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
+            finish();
+        }
+        if (requestCode == imagea && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            c.close();
+            WXImageObject imgObj = new WXImageObject();
+            //设置文件图像的路径
+            imgObj.setImagePath(imagePath);
+            //创建wxmediamessage对象，并包装object对象
+            WXMediaMessage msg = new WXMediaMessage();
+            msg.mediaObject = imgObj;
+            // 压缩图像
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
+            //释放图像所占用的内存
+            bitmap.recycle();
+            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
+            //创建sendmessageto.req对象
+            SendMessageToWX.Req req = new SendMessageToWX.Req();
+            req.transaction = buildTransaction("img");
+            req.message = msg;
+            req.scene = SendMessageToWX.Req.WXSceneTimeline;
+            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
+
+            finish();
+
+        }
+    }
+
+    private String buildTransaction(final String type){
+        return (type==null)?String.valueOf(System.currentTimeMillis()):type+ System.currentTimeMillis();
     }
 
     private void onMoveBtn() {
@@ -466,89 +535,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //获取图片路径
-        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String imagePath = c.getString(columnIndex);
-            c.close();
-
-
-            WXImageObject imgObj = new WXImageObject();
-            //设置文件图像的路径
-            imgObj.setImagePath(imagePath);
-            //创建wxmediamessage对象，并包装object对象
-            WXMediaMessage msg = new WXMediaMessage();
-            msg.mediaObject = imgObj;
-            // 压缩图像
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
-            //释放图像所占用的内存
-            bitmap.recycle();
-            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
-            //创建sendmessageto.req对象
-            SendMessageToWX.Req req = new SendMessageToWX.Req();
-            req.transaction = buildTransaction("img");
-            req.message = msg;
-            req.scene = SendMessageToWX.Req.WXSceneSession;
-            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
-
-            finish();
-
-        }
-        if (requestCode == imagea && resultCode == Activity.RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String imagePath = c.getString(columnIndex);
-            c.close();
-            WXImageObject imgObj = new WXImageObject();
-            //设置文件图像的路径
-            imgObj.setImagePath(imagePath);
-            //创建wxmediamessage对象，并包装object对象
-            WXMediaMessage msg = new WXMediaMessage();
-            msg.mediaObject = imgObj;
-            // 压缩图像
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 120, 150, true);
-            //释放图像所占用的内存
-            bitmap.recycle();
-            msg.thumbData = bmpToByteArray(thumbBmp, true);//设置缩略图
-            //创建sendmessageto.req对象
-            SendMessageToWX.Req req = new SendMessageToWX.Req();
-            req.transaction = buildTransaction("img");
-            req.message = msg;
-            req.scene = SendMessageToWX.Req.WXSceneTimeline;
-            Toast.makeText(this, String.valueOf(api.sendReq(req)), Toast.LENGTH_LONG).show();
-
-            finish();
-
-        }
-    }
-
-    private String buildTransaction(final String type){
-        return (type==null)?String.valueOf(System.currentTimeMillis()):type+ System.currentTimeMillis();
-    }
 
     /**
      * 根据天气id请求城市天气信息。

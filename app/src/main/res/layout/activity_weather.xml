@@ -101,7 +101,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:onClick="shareto_wechat_click"
+
                 android:layout_weight="1"
                 android:id="@+id/shareto_wechat"
                 android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                 android:src="@drawable/wechat" />
 
             <ImageView
-                android:onClick="wechattofriend_click"
+
                 android:layout_weight="1"
                 android:id="@+id/shareto_wechatfriend"
                 android:src="@drawable/wechatfriend"
