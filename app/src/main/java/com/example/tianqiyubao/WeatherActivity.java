@@ -353,7 +353,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             right = left + v.getWidth();
                         }
                         if (right > screenWidth) {
-                            right = screenWidth;
+                            right = screenWidth+60;
                             left = right - v.getWidth();
                         }
                         if (top < 0) {

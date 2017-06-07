@@ -126,6 +126,6 @@
         android:layout_gravity="right|center"
         app:backgroundTint="#fff"
         app:borderWidth="0dp"
-        android:layout_margin="5dp"
+        android:layout_marginRight="-40sp"
         android:src="@drawable/share" />
 </FrameLayout>
