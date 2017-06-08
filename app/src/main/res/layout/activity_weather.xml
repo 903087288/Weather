@@ -115,6 +115,11 @@
                 android:src="@drawable/wechatfriend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/rdcy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广告"/>
         </LinearLayout>
     </LinearLayout>
     </android.support.v4.widget.DrawerLayout>

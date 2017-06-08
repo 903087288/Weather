@@ -63,7 +63,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.tianqiyubao.R.id.max_text;
 import static com.tencent.mm.sdk.platformtools.Util.bmpToByteArray;
+import static com.tencent.mm.sdk.platformtools.Util.stringsToList;
 
 /**
  * Created by dell on 2017/5/22.
@@ -343,9 +345,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         // 移动中动态设置位置
                         int dx = (int) event.getRawX() - lastX;//位移量X
                         int dy = (int) event.getRawY() - lastY;//位移量Y
-                        int left = v.getLeft() ;
+                        int left = v.getLeft() + dx;
                         int top = v.getTop() + dy;
-                        int right = v.getRight() ;
+                        int right = v.getRight() + dx;
                         int bottom = v.getBottom() + dy;
                         //++限定按钮被拖动的范围
                         if (left < 0) {
@@ -353,7 +355,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             right = left + v.getWidth();
                         }
                         if (right > screenWidth) {
-                            right = screenWidth+60;
+                            right = screenWidth;
                             left = right - v.getWidth();
                         }
                         if (top < 0) {
@@ -612,7 +614,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * 处理并展示Weather实体类中的数据。
      */
-    private void showWeatherInfo(Weather weather) {
+    private void showWeatherInfo(final Weather weather) {
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "℃";
@@ -626,7 +628,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item, forecastLayout, false);
             TextView dateText = (TextView) view.findViewById(R.id.date_text);
             TextView infoText = (TextView) view.findViewById(R.id.info_text);
-            TextView maxText = (TextView) view.findViewById(R.id.max_text);
+            TextView maxText = (TextView) view.findViewById(max_text);
             TextView minText = (TextView) view.findViewById(R.id.min_text);
             dateText.setText(forecast.date);
             infoText.setText(forecast.more.info);
@@ -638,7 +640,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             aqiText.setText(weather.aqi.city.aqi);
             pm25Text.setText(weather.aqi.city.pm25);
         }
-
         String comfort = "舒适度：" + weather.suggestion.comfort.info;
         String carWash = "洗车指数：" + weather.suggestion.carWash.info;
         String sport = "运行建议：" + weather.suggestion.sport.info;
@@ -646,7 +647,43 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        Button rdcy=(Button)findViewById(R.id.rdcy);
+        rdcy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView tv1=(TextView) findViewById(R.id.info_text);
+                String name=tv1.getText().toString();
+                TextView tv2=(TextView) findViewById(max_text);
+                String name1=tv2.getText().toString();
+                int i=Integer.parseInt(name1);
+                switch (name) {
+                    case"晴":
+                        if (i>=30){
+                            Uri uri = Uri.parse("https://zhidao.baidu.com/question/461981913.html");
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        }else if (i<30){
+                            Uri uri2 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                            Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+                            startActivity(intent2);
+                        }
+                        break;
+                    case "小雨":
+                        Uri uri = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+
+                        break;
+                    case "阴":
+                        Uri uri1 = Uri.parse("http://www.baidu.com");
+                        Intent intent1 = new Intent(Intent.ACTION_VIEW, uri1);
+                        startActivity(intent1);
+                }
+           /*     Uri uri = Uri.parse("http://baike.baidu.com/view/753813.htm");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);*/
+            }
+        });
+        }
 
     }
-
-}
