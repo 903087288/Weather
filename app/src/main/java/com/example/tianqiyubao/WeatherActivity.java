@@ -647,7 +647,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
-        Button rdcy=(Button)findViewById(R.id.rdcy);
+        ImageView rdcy=(ImageView) findViewById(R.id.rdcy);
         rdcy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -674,10 +674,46 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         startActivity(intent);
 
                         break;
-                    case "阴":
+                    case "轻度霾":
+                        Uri uri2 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent2 = new Intent(Intent.ACTION_VIEW, uri2);
+                        startActivity(intent2);
+                        break;
+                    case "阵雨":
+                        Uri uri3 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
+                        startActivity(intent3);
+                        break;
+                    case "雷阵雨":
+                        Uri uri4 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
+                        startActivity(intent4);
+                        break;
+                    case "轻微霾":
+                        Uri uri5 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent5 = new Intent(Intent.ACTION_VIEW, uri5);
+                        startActivity(intent5);
+                        break;
+                    case "重度霾":
+                        Uri uri6 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent6 = new Intent(Intent.ACTION_VIEW, uri6);
+                        startActivity(intent6);
+                        break;
+                    case "特强霾":
+                        Uri uri7 = Uri.parse("http://sjz.58.com/sou/?key=%E9%9B%A8%E4%BC%9E");
+                        Intent intent7 = new Intent(Intent.ACTION_VIEW, uri7);
+                        startActivity(intent7);
+                        break;
+                    case "中度霾":
                         Uri uri1 = Uri.parse("http://www.baidu.com");
                         Intent intent1 = new Intent(Intent.ACTION_VIEW, uri1);
                         startActivity(intent1);
+                        break;
+                    default:
+                        Uri uri8 = Uri.parse("http://www.baidu.com");
+                        Intent intent8 = new Intent(Intent.ACTION_VIEW, uri8);
+                        startActivity(intent8);
+                        break;
                 }
            /*     Uri uri = Uri.parse("http://baike.baidu.com/view/753813.htm");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
