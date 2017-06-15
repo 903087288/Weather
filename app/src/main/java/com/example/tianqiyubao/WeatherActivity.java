@@ -684,10 +684,30 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         Intent intent3 = new Intent(Intent.ACTION_VIEW, uri3);
                         startActivity(intent3);
                         break;
+                    case "中雨":
+                        Uri uri9 = Uri.parse("https://s.taobao.com/search?q=%E9%9B%A8%E4%BC%9E&imgfile=&commend=all&ssid=s5-e&search_type=item&sourceId=tb.index&spm=a21bo.50862.201856-taobao-item.1&ie=utf8&initiative_id=tbindexz_20170615&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
+                        Intent intent9 = new Intent(Intent.ACTION_VIEW, uri9);
+                        startActivity(intent9);
+                        break;
                     case "雷阵雨":
                         Uri uri4 = Uri.parse("https://s.taobao.com/search?q=%E9%9B%A8%E8%A1%A3&imgfile=&js=1&stats_click=search_radio_all%3A1&initiative_id=staobaoz_20170615&ie=utf8&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
                         Intent intent4 = new Intent(Intent.ACTION_VIEW, uri4);
                         startActivity(intent4);
+                        break;
+                    case "暴雨":
+                        Uri uri10 = Uri.parse("https://s.taobao.com/search?q=%E9%9B%A8%E8%A1%A3&imgfile=&js=1&stats_click=search_radio_all%3A1&initiative_id=staobaoz_20170615&ie=utf8&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
+                        Intent intent10 = new Intent(Intent.ACTION_VIEW, uri10);
+                        startActivity(intent10);
+                        break;
+                    case "大暴雨":
+                        Uri uri11 = Uri.parse("https://s.taobao.com/search?q=%E9%9B%A8%E8%A1%A3&imgfile=&js=1&stats_click=search_radio_all%3A1&initiative_id=staobaoz_20170615&ie=utf8&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
+                        Intent intent11 = new Intent(Intent.ACTION_VIEW, uri11);
+                        startActivity(intent11);
+                        break;
+                    case "大雨":
+                        Uri uri12 = Uri.parse("https://s.taobao.com/search?q=%E9%9B%A8%E8%A1%A3&imgfile=&js=1&stats_click=search_radio_all%3A1&initiative_id=staobaoz_20170615&ie=utf8&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
+                        Intent intent12 = new Intent(Intent.ACTION_VIEW, uri12);
+                        startActivity(intent12);
                         break;
                     case "轻微霾":
                         Uri uri5 = Uri.parse("https://s.taobao.com/search?q=%E5%8F%A3%E7%BD%A9&imgfile=&js=1&stats_click=search_radio_all%3A1&initiative_id=staobaoz_20170615&ie=utf8&loc=%E7%9F%B3%E5%AE%B6%E5%BA%84");
